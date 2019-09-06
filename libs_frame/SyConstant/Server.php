@@ -13,6 +13,8 @@ final class Server
 {
     use SimpleTrait;
 
+    const SERVER_DATA_KEY_TIMESTAMP = 'SYREQ_TIME'; //服务端内部数据键名-请求时间戳
+
     //进程常量
     const PROCESS_TYPE_TASK = 'Task'; //类型-task
     const PROCESS_TYPE_WORKER = 'Worker'; //类型-worker
@@ -43,4 +45,11 @@ final class Server
     const VERSION_MIN_SEASLOG = '1.9.0'; //最低版本-seaslog
     const VERSION_MIN_YAC = '2.0.2'; //最低版本-yac
     const VERSION_MIN_YAF = '3.0.7'; //最低版本-yaf
+
+    //注册常量
+    const REGISTRY_NAME_SERVICE_ERROR = 'SERVICE_ERROR'; //名称-服务错误
+    const REGISTRY_NAME_REQUEST_HEADER = 'REQUEST_HEADER'; //名称-请求头
+    const REGISTRY_NAME_REQUEST_SERVER = 'REQUEST_SERVER'; //名称-服务器信息
+    const REGISTRY_NAME_RESPONSE_HEADER = 'RESPONSE_HEADER'; //名称-响应头
+    const REGISTRY_NAME_RESPONSE_COOKIE = 'RESPONSE_COOKIE'; //名称-响应cookie
 }

@@ -7,6 +7,7 @@
  */
 namespace SyServer;
 
+use Log\Log;
 use SyConstant\Server;
 use Tool\Dir;
 use Tool\Tool;
@@ -87,6 +88,9 @@ abstract class BaseServer
             fwrite($tipFileObj, '');
             fclose($tipFileObj);
         }
+
+        //设置日志目录
+        Log::setPath(SY_LOG_PATH);
     }
 
     private function __clone()
@@ -236,13 +240,12 @@ abstract class BaseServer
      * 启动工作进程
      * @param \swoole_server $server
      * @param int $workerId 进程编号
-     * @todo 集成错误处理
      */
     public function onWorkerStart(\swoole_server $server, $workerId)
     {
-//        //设置错误和异常处理
-//        set_exception_handler('\SyError\ErrorHandler::handleException');
-//        set_error_handler('\SyError\ErrorHandler::handleError');
+        //设置错误和异常处理
+        set_exception_handler('\SyError\ErrorHandler::handleException');
+        set_error_handler('\SyError\ErrorHandler::handleError');
         //设置时区
         date_default_timezone_set('PRC');
         //禁止引用外部xml实体
@@ -335,7 +338,6 @@ abstract class BaseServer
 
     /**
      * @param \swoole_server $server
-     * @todo 集成日志
      */
     protected function basicStart(\swoole_server $server)
     {
@@ -343,7 +345,7 @@ abstract class BaseServer
 
         Dir::create(SY_ROOT . '/pidfile/');
         if (file_put_contents($this->_pidFile, $server->master_pid) === false) {
-//            Log::error('write ' . SY_MODULE . ' pid file error');
+            Log::error('write ' . SY_MODULE . ' pid file error');
         }
 
         file_put_contents($this->_tipFile, '\e[1;36m start ' . SY_MODULE . ': \e[0m \e[1;32m \t[success] \e[0m');
@@ -352,13 +354,12 @@ abstract class BaseServer
     /**
      * @param \swoole_server $server
      * @param int $workId
-     * @todo 集成日志
      */
     protected function basicWorkStop(\swoole_server $server, int $workId)
     {
         $errCode = $server->getLastError();
         if ($errCode > 0) {
-//            Log::error('swoole work stop,workId=' . $workId . ',errorCode=' . $errCode . ',errorMsg=' . print_r(error_get_last(), true));
+            Log::error('swoole work stop,workId=' . $workId . ',errorCode=' . $errCode . ',errorMsg=' . print_r(error_get_last(), true));
         }
     }
 
@@ -367,13 +368,25 @@ abstract class BaseServer
      * @param int $workId
      * @param int $workPid
      * @param int $exitCode
-     * @todo 集成日志
      */
     protected function basicWorkError(\swoole_server $server, $workId, $workPid, $exitCode)
     {
         if ($exitCode > 0) {
             $msg = 'swoole work error. work_id=' . $workId . '|work_pid=' . $workPid . '|exit_code=' . $exitCode . '|err_msg=' . $server->getLastError();
-//            Log::error($msg);
+            Log::error($msg);
         }
+    }
+
+    /**
+     * @return string
+     */
+    public static function getReqId() : string
+    {
+        if (isset($_SERVER['SYREQ_ID'])) {
+            return $_SERVER['SYREQ_ID'];
+        }
+        $reqId = hash('md4', Tool::getNowTime() . Tool::createNonceStr(8));
+        $_SERVER['SYREQ_ID'] = $reqId;
+        return $reqId;
     }
 }

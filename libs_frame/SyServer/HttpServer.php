@@ -7,6 +7,8 @@
  */
 namespace SyServer;
 
+use Log\Log;
+
 class HttpServer extends BaseServer
 {
     public function __construct(int $port)
@@ -20,6 +22,7 @@ class HttpServer extends BaseServer
 
     public function onRequest(\swoole_http_request $request, \swoole_http_response $response)
     {
+        Log::log('aabbcc');
         $response->header('Content-Type', 'text/html; charset=utf-8');
         $response->end('<h1>Hello Swoole. #' . $this->_port . '</h1>');
     }
