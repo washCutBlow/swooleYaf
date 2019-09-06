@@ -11,10 +11,6 @@ return [
                 'host' => $serverHost,
                 'port' => 7000,
             ],
-            1 => [
-                'host' => $serverHost,
-                'port' => 7001,
-            ],
         ],
     ],
 ];
