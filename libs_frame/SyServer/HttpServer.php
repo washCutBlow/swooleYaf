@@ -7,8 +7,6 @@
  */
 namespace SyServer;
 
-use DesignPatterns\Factories\CacheSimpleFactory;
-
 class HttpServer extends BaseServer
 {
     public function __construct(int $port)
@@ -22,9 +20,8 @@ class HttpServer extends BaseServer
 
     public function onRequest(\swoole_http_request $request, \swoole_http_response $response)
     {
-        $cacheData = CacheSimpleFactory::getRedisInstance()->get('jwtest');
         $response->header('Content-Type', 'text/html; charset=utf-8');
-        $response->end('<h1>Hello Swoole. #' . $this->_port . ',cachedata=' . $cacheData . '</h1>');
+        $response->end('<h1>Hello Swoole. #' . $this->_port . '</h1>');
     }
 
     public function start()
