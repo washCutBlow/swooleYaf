@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/helper_load.php';
 
-$server = new \SyServer\HttpServer();
-$server->start();
+$projects = include __DIR__ . '/config_projects.php';
+$commandPrefix = 'sudo /usr/local/php7/bin/php ' . __DIR__ . '/helper_service.php';
+\Helper\ServiceManager::handleAllService($commandPrefix, $projects);

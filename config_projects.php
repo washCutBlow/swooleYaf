@@ -1,7 +1,20 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: 姜伟
- * Date: 2019/9/6 0006
- * Time: 9:04
- */
+$serverHost = \Yaconf::get('syserver.base.server.host');
+
+return [
+    0 => [
+        'module_type' => 'api',
+        'module_path' => 'sy_api',
+        'module_name' => 'a01api',
+        'listens' => [
+            0 => [
+                'host' => $serverHost,
+                'port' => 7000,
+            ],
+            1 => [
+                'host' => $serverHost,
+                'port' => 7001,
+            ],
+        ],
+    ],
+];

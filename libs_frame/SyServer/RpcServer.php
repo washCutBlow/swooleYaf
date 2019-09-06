@@ -7,6 +7,14 @@
  */
 namespace SyServer;
 
-class RpcServer
+class RpcServer extends BaseServer
 {
+    public function __construct(int $port)
+    {
+        parent::__construct($port);
+    }
+
+    private function __clone()
+    {
+    }
 }
