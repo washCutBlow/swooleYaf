@@ -21,7 +21,7 @@ class HttpServer extends BaseServer
     public function onRequest(\swoole_http_request $request, \swoole_http_response $response)
     {
         $response->header('Content-Type', 'text/html; charset=utf-8');
-        $response->end('<h1>Hello Swoole. #' . rand(1000, 9999) . '</h1>');
+        $response->end('<h1>Hello Swoole. #' . $this->_port . '</h1>');
     }
 
     public function start()
