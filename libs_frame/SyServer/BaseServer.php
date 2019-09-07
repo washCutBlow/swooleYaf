@@ -8,12 +8,20 @@
 namespace SyServer;
 
 use Log\Log;
+use Response\Result;
+use SyConstant\ErrorCode;
+use SyConstant\Project;
 use SyConstant\Server;
+use SyTrait\Server\FrameBaseTrait;
+use SyTrait\Server\ProjectBaseTrait;
 use Tool\Dir;
 use Tool\Tool;
 
 abstract class BaseServer
 {
+    use FrameBaseTrait;
+    use ProjectBaseTrait;
+
     /**
      * 请求服务对象
      * @var \swoole_http_server|\swoole_server
@@ -44,6 +52,16 @@ abstract class BaseServer
      * @var string
      */
     protected $_tipFile = '';
+    /**
+     * 服务token码,用于标识不同的服务,每个服务的token不一样
+     * @var string
+     */
+    protected static $_serverToken = '';
+    /**
+     * 请求开始毫秒级时间戳
+     * @var float
+     */
+    protected static $_reqStartTime = 0.0;
 
     public function __construct(int $port)
     {
@@ -70,6 +88,11 @@ abstract class BaseServer
         //dispatch_mode=1或3后,系统无法保证onConnect/onReceive/onClose的顺序,因此可能会有一些请求数据在连接关闭后才能到达Worker进程
         //设置为false表示无论连接是否关闭Worker进程都会处理数据请求
         $this->_configs['swoole']['discard_timeout_request'] = false;
+        //设置请求数据尺寸
+        $this->_configs['swoole']['open_length_check'] = true;
+        $this->_configs['swoole']['package_max_length'] = Project::SIZE_SERVER_PACKAGE_MAX;
+        $this->_configs['swoole']['socket_buffer_size'] = Project::SIZE_CLIENT_SOCKET_BUFFER;
+        $this->_configs['swoole']['buffer_output_size'] = Project::SIZE_CLIENT_BUFFER_OUTPUT;
         //设置线程数量
         $execRes = Tool::execSystemCommand('cat /proc/cpuinfo | grep "processor" | wc -l');
         $this->_configs['swoole']['reactor_num'] = (int)(2 * $execRes['data'][0]);
@@ -88,6 +111,9 @@ abstract class BaseServer
             fwrite($tipFileObj, '');
             fclose($tipFileObj);
         }
+
+        //生成服务唯一标识
+        self::$_serverToken = hash('crc32b', $this->_configs['server']['host'] . ':' . $this->_configs['server']['port']);
 
         //设置日志目录
         Log::setPath(SY_LOG_PATH);
@@ -324,6 +350,59 @@ abstract class BaseServer
      */
     abstract public function onWorkerError(\swoole_server $server, $workId, $workPid, $exitCode);
 
+    /**
+     * 检测请求URI
+     * @param string $uri
+     * @return array
+     */
+    protected function checkRequestUri(string $uri) : array
+    {
+        $nowUri = $uri;
+        $checkRes = [
+            'uri' => '',
+            'error' => '',
+        ];
+
+        $uriRes = Tool::handleYafUri($nowUri);
+        if (strlen($uriRes) == 0) {
+            $checkRes['uri'] = $nowUri;
+        } else {
+            $errRes = new Result();
+            $errRes->setCodeMsg(ErrorCode::COMMON_ROUTE_URI_FORMAT_ERROR, $uriRes);
+            $checkRes['error'] = $errRes->getJson();
+            unset($errRes);
+        }
+
+        return $checkRes;
+    }
+
+    /**
+     * 获取预处理函数
+     * @param string $uri
+     * @param array $frameMap
+     * @param array $projectMap
+     * @return bool|string
+     */
+    protected function getPreProcessFunction(string $uri, array $frameMap, array $projectMap)
+    {
+        $funcName = '';
+        if (strlen($uri) == 5) {
+            if (isset($frameMap[$uri])) {
+                $funcName = $frameMap[$uri];
+                if (strpos($funcName, 'preProcessFrame') !== 0) {
+                    $funcName = false;
+                }
+            } elseif (isset($projectMap[$uri])) {
+                $funcName = $projectMap[$uri];
+                if (strpos($funcName, 'preProcessProject') !== 0) {
+                    $funcName = false;
+                }
+            }
+        }
+
+        return $funcName;
+    }
+
     protected function baseStart(array $registerMap)
     {
         $this->_server->set($this->_configs['swoole']);
@@ -349,6 +428,26 @@ abstract class BaseServer
         }
 
         file_put_contents($this->_tipFile, '\e[1;36m start ' . SY_MODULE . ': \e[0m \e[1;32m \t[success] \e[0m');
+
+        $config = Tool::getConfig('project.' . SY_ENV . SY_PROJECT);
+        Dir::create($config['dir']['store']['image']);
+        Dir::create($config['dir']['store']['music']);
+        Dir::create($config['dir']['store']['resources']);
+        Dir::create($config['dir']['store']['cache']);
+
+        self::$_syServer->set(self::$_serverToken, [
+            'memory_usage' => memory_get_usage(),
+            'timer_time' => 0,
+            'request_times' => 0,
+            'request_handling' => 0,
+            'host_local' => $this->_host,
+            'storepath_image' => $config['dir']['store']['image'],
+            'storepath_music' => $config['dir']['store']['music'],
+            'storepath_resources' => $config['dir']['store']['resources'],
+            'storepath_cache' => $config['dir']['store']['cache'],
+            'token_etime' => time() + 7200,
+            'unique_num' => 100000000,
+        ]);
     }
 
     /**

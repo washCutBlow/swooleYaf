@@ -182,4 +182,64 @@ class Tool
 
         return $resStr;
     }
+
+    /**
+     * 把数组转移成json字符串
+     * @param array|object $arr
+     * @param int|string $options
+     * @return bool|string
+     */
+    public static function jsonEncode($arr, $options = JSON_OBJECT_AS_ARRAY)
+    {
+        if (is_array($arr) || is_object($arr)) {
+            return json_encode($arr, $options);
+        }
+
+        return false;
+    }
+
+    /**
+     * 解析json
+     * @param string $json
+     * @param int|string $assoc
+     * @return bool|mixed
+     */
+    public static function jsonDecode($json, $assoc = JSON_OBJECT_AS_ARRAY)
+    {
+        if (is_string($json)) {
+            return json_decode($json, $assoc);
+        }
+
+        return false;
+    }
+
+    /**
+     * 处理yaf框架需要的URI
+     * @param string $uri
+     * @return string
+     */
+    public static function handleYafUri(string &$uri) : string
+    {
+        if ((strlen($uri) == 0) || ($uri == '/')) {
+            $uri = '/';
+
+            return '';
+        } elseif (substr($uri, 0, 1) != '/') {
+            return 'URI格式错误';
+        }
+        if (substr($uri, - 1) == '/') {
+            $uri = substr($uri, 0, - 1);
+        }
+
+        $tempArr = explode('/', $uri);
+        if (!ctype_alnum($tempArr[1])) {
+            return '模块不合法';
+        } elseif (isset($tempArr[2]) && !ctype_alnum($tempArr[2])) {
+            return '控制器名称不合法';
+        } elseif (isset($tempArr[3]) && !ctype_alnum($tempArr[3])) {
+            return '方法名称不合法';
+        }
+
+        return '';
+    }
 }
