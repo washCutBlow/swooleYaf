@@ -16,6 +16,7 @@ use SyTrait\Server\FrameBaseTrait;
 use SyTrait\Server\ProjectBaseTrait;
 use Tool\Dir;
 use Tool\Tool;
+use Yaf\Application;
 
 abstract class BaseServer
 {
@@ -62,6 +63,10 @@ abstract class BaseServer
      * @var float
      */
     protected static $_reqStartTime = 0.0;
+    /**
+     * @var \Yaf\Application
+     */
+    protected $_app = null;
 
     public function __construct(int $port)
     {
@@ -276,6 +281,11 @@ abstract class BaseServer
         date_default_timezone_set('PRC');
         //禁止引用外部xml实体
         libxml_disable_entity_loader(true);
+
+        $this->_app = new Application(APP_PATH . '/conf/application.ini', SY_ENV);
+        $this->_app->bootstrap()->getDispatcher()->returnResponse(true);
+        $this->_app->bootstrap()->getDispatcher()->autoRender(false);
+
         if ($workerId >= $server->setting['worker_num']) {
             @cli_set_process_title(Server::PROCESS_TYPE_TASK . SY_MODULE . $this->_port);
         } else {
@@ -487,5 +497,17 @@ abstract class BaseServer
         $reqId = hash('md4', Tool::getNowTime() . Tool::createNonceStr(8));
         $_SERVER['SYREQ_ID'] = $reqId;
         return $reqId;
+    }
+
+    protected function handleReqExceptionByFrame(\Exception $e)
+    {
+        $error = new Result();
+        if (is_numeric($e->getCode())) {
+            $error->setCodeMsg((int)$e->getCode(), $e->getMessage());
+        } else {
+            $error->setCodeMsg(ErrorCode::COMMON_SERVER_ERROR, '服务出错');
+        }
+
+        return $error;
     }
 }

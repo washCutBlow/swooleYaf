@@ -17,6 +17,7 @@ use SyTrait\Server\ProjectHttpTrait;
 use SyTrait\Server\ProjectPreProcessHttpTrait;
 use Tool\Tool;
 use Yaf\Registry;
+use Yaf\Request\Http;
 
 class HttpServer extends BaseServer
 {
@@ -314,7 +315,31 @@ class HttpServer extends BaseServer
 
         $this->initRequest($request, $initRspHeaders);
 
-        SyResponseHttp::header('Content-Type', 'text/html; charset=utf-8');
-        return '<h1>Hello Swoole. #' . $this->_port . '</h1>';
+        $error = null;
+        $result = '';
+        $httpObj = new Http($uri);
+        try {
+            $result = $this->_app->bootstrap()->getDispatcher()->dispatch($httpObj)->getBody();
+            if (strlen($result) == 0) {
+                $error = new Result();
+                $error->setCodeMsg(ErrorCode::SWOOLE_SERVER_NO_RESPONSE_ERROR, '未设置响应数据');
+            }
+        } catch (\Exception $e) {
+            SyResponseHttp::header('Content-Type', 'application/json; charset=utf-8');
+            if (SY_REQ_EXCEPTION_HANDLE_TYPE) {
+                $error = $this->handleReqExceptionByFrame($e);
+            } else {
+                $error = $this->handleReqExceptionByProject($e);
+            }
+        } finally {
+            self::$_syServer->decr(self::$_serverToken, 'request_handling', 1);
+            unset($httpObj);
+            if (is_object($error)) {
+                $result = $error->getJson();
+                unset($error);
+            }
+        }
+
+        return $result;
     }
 }
