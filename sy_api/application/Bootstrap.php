@@ -11,6 +11,11 @@ class Bootstrap extends \Yaf\Bootstrap_Abstract
     }
 
     /**
+     * 首次请求标识,true:首次请求 false:非首次请求
+     * @var bool
+     */
+    protected static $firstTag = true;
+    /**
      * APP配置数组
      * @var array
      */
@@ -20,11 +25,6 @@ class Bootstrap extends \Yaf\Bootstrap_Abstract
      * @var array
      */
     private static $acceptModules = [];
-    /**
-     * 首次请求标识,true:首次请求 false:非首次请求
-     * @var bool
-     */
-    protected static $firstTag = true;
 
     public function _initBoot(\Yaf\Dispatcher $dispatcher)
     {
@@ -47,7 +47,9 @@ class Bootstrap extends \Yaf\Bootstrap_Abstract
             if (empty(self::$acceptModules)) {
                 throw new \SyException\Swoole\ServerException('允许的模块列表不能为空', \SyConstant\ErrorCode::SWOOLE_SERVER_PARAM_ERROR);
             }
+
             \Yaf\Registry::set('config', $config);
+
             //设置默认模块
             $defaultModule = isset(self::$appConfigs['application']['dispatcher']['defaultModule']) ? self::$appConfigs['application']['dispatcher']['defaultModule'] : '';
             if (strlen($defaultModule) == 0) {
@@ -84,6 +86,7 @@ class Bootstrap extends \Yaf\Bootstrap_Abstract
             $dispatcher->setDefaultModule(SY_DEFAULT_MODULE)
                        ->setDefaultController(SY_DEFAULT_CONTROLLER)
                        ->setDefaultAction(SY_DEFAULT_ACTION);
+
             self::$firstTag = false;
         }
     }
