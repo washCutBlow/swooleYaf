@@ -52,4 +52,11 @@ final class Server
     const REGISTRY_NAME_REQUEST_SERVER = 'REQUEST_SERVER'; //名称-服务器信息
     const REGISTRY_NAME_RESPONSE_HEADER = 'RESPONSE_HEADER'; //名称-响应头
     const REGISTRY_NAME_RESPONSE_COOKIE = 'RESPONSE_COOKIE'; //名称-响应cookie
+    const REGISTRY_NAME_PREFIX_VALIDATOR = 'VALIDATOR_'; //名称前缀-校验器
+    const REGISTRY_NAME_PREFIX_CONTROLLER = 'CONTROLLER_'; //名称前缀-控制器
+    const REGISTRY_NAME_PREFIX_ASPECT_BEFORE = 'ASPECTBEFORE_'; //名称前缀-前置切面
+    const REGISTRY_NAME_PREFIX_ASPECT_AFTER = 'ASPECTAFTER_'; //名称前缀-后置切面
+
+    //路由常量
+    const ROUTE_TYPE_SIMPLE = 'simple'; //类型-简单路由
 }

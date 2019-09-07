@@ -1,5 +1,5 @@
 <?php
-class IndexController extends \Yaf\Controller_Abstract
+class IndexController extends CommonController
 {
     public function init()
     {
@@ -11,9 +11,7 @@ class IndexController extends \Yaf\Controller_Abstract
             'name' => (string)\Request\SyRequest::getParams('name', 'jw'),
         ];
         $res = \Dao\IndexDao::index($needParams);
-
-        $result = new \Response\Result();
-        $result->setData($res);
-        $this->getResponse()->setBody($result->getJson());
+        $this->SyResult->setData($res);
+        $this->sendRsp();
     }
 }
