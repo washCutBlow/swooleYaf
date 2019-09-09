@@ -8,6 +8,7 @@
 namespace DesignPatterns\Factories;
 
 use DesignPatterns\Singletons\RedisSingleton;
+use DesignPatterns\Singletons\YacSingleton;
 use SyTrait\SimpleTrait;
 
 class CacheSimpleFactory
@@ -21,5 +22,14 @@ class CacheSimpleFactory
     public static function getRedisInstance()
     {
         return RedisSingleton::getInstance()->getConn();
+    }
+
+    /**
+     * 获取yac实例
+     * @return \Yac
+     */
+    public static function getYacInstance()
+    {
+        return YacSingleton::getInstance();
     }
 }

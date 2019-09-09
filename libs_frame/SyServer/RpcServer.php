@@ -35,6 +35,13 @@ class RpcServer extends BaseServer
     public function __construct(int $port)
     {
         parent::__construct($port);
+        $projectLength = strlen(SY_PROJECT);
+        $serverType = Tool::getConfig('project.' . SY_ENV . SY_PROJECT . '.modules.' . substr(SY_MODULE, $projectLength) . '.type');
+        if ($serverType != Server::SERVER_TYPE_API_MODULE) {
+            exit('服务端类型不支持' . PHP_EOL);
+        }
+        define('SY_SERVER_TYPE', $serverType);
+        $this->_configs['server']['cachenum']['modules'] = (int)Tool::getArrayVal($this->_configs, 'server.cachenum.modules', 0, true);
         $this->checkServerRpc();
         $this->_configs['swoole']['package_length_type'] = 'L';
         $this->_configs['swoole']['package_length_offset'] = 4;

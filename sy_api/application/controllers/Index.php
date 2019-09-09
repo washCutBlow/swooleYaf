@@ -8,11 +8,7 @@ class IndexController extends CommonController
 
     public function indexAction()
     {
-        $needParams = [
-            'name' => (string)\Request\SyRequest::getParams('name', 'jw'),
-        ];
-        $res = \Dao\IndexDao::index($needParams);
-        $this->SyResult->setData($res);
-        $this->sendRsp();
+        $res = \SyModule\SyModuleUser::getInstance()->sendApiReq('/Index/Index/index', $_GET);
+        $this->sendRsp($res);
     }
 }

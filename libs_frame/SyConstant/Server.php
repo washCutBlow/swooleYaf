@@ -13,6 +13,8 @@ final class Server
 {
     use SimpleTrait;
 
+    const SERVER_TYPE_API_GATE = 'api'; //服务端类型-api入口
+    const SERVER_TYPE_API_MODULE = 'rpc'; //服务端类型-api模块
     const SERVER_DATA_KEY_TIMESTAMP = 'SYREQ_TIME'; //服务端内部数据键名-请求时间戳
 
     //进程常量
@@ -59,4 +61,14 @@ final class Server
 
     //路由常量
     const ROUTE_TYPE_SIMPLE = 'simple'; //类型-简单路由
+
+    //熔断器常量
+    const FUSE_STATE_OPEN = 'open'; //状态-开启
+    const FUSE_STATE_CLOSED = 'closed'; //状态-关闭
+    const FUSE_STATE_HALF_OPEN = 'half_open'; //状态-半开
+    const FUSE_TIME_ERROR_STAT = 15; //错误统计间隔时间,单位为秒
+    const FUSE_TIME_OPEN_KEEP = 10; //开启状态保持时间,单位为秒
+    const FUSE_NUM_REQUEST_ERROR = 20; //请求出错次数
+    const FUSE_NUM_HALF_REQUEST_SUCCESS = 10; //半开状态请求成功次数
+    const FUSE_MSG_REQUEST_ERROR = '{"code":10001,"data":[],"msg":"服务繁忙,请稍后重试"}'; //请求出错提示消息
 }

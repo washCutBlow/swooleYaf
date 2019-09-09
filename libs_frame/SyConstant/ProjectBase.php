@@ -24,4 +24,11 @@ class ProjectBase
     const SIZE_SERVER_PACKAGE_MAX = 6291456; //服务端容量-最大接收数据大小,单位为字节,默认为6M
     const SIZE_CLIENT_SOCKET_BUFFER = 12582912; //客户端容量-连接的缓存区大小,单位为字节,默认为12M
     const SIZE_CLIENT_BUFFER_OUTPUT = 4194304; //客户端容量-单次最大发送数据大小,单位为字节,默认为4M
+
+    const TIME_EXPIRE_SWOOLE_CLIENT_RPC = 3000; //超时时间-rpc服务客户端,单位为毫秒
+    const TIME_EXPIRE_SWOOLE_CLIENT_SYNC_REQUEST = 1.5; //超时时间-swoole同步客户端请求,单位为秒
+
+    //YAC常量,以0000开头的前缀为框架内部前缀,并键名总长度不超过48个字符串
+    const YAC_PREFIX_FUSE = '0000'; //前缀-熔断器
+    const YAC_PREFIX_API_SIGN = '0001'; //前缀-接口签名
 }
