@@ -13,4 +13,15 @@ return [
             ],
         ],
     ],
+    1 => [
+        'module_type' => 'rpc',
+        'module_path' => 'sy_user',
+        'module_name' => 'a01user',
+        'listens' => [
+            0 => [
+                'host' => $serverHost,
+                'port' => 7010,
+            ],
+        ],
+    ],
 ];
