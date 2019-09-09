@@ -7,6 +7,7 @@
  */
 namespace SyFrame\Routes;
 
+use Log\Log;
 use SyConstant\ErrorCode;
 use SyException\Validator\ValidatorException;
 use SyFrame\SimpleBootstrap;
@@ -37,6 +38,7 @@ class SimpleRoute extends Request_Abstract implements Route_Interface
      */
     public function route($request)
     {
+        Log::log('xxxx:' . $request->getRequestUri());
         $uriArr = explode('/', $request->getRequestUri());
         $moduleName = strlen($uriArr[1]) > 0 ? ucfirst($uriArr[1]) : SY_DEFAULT_MODULE;
         if (!isset($this->acceptModules[$moduleName])) {
