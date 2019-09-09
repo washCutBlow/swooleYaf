@@ -9,6 +9,7 @@ namespace Request;
 
 use Log\Log;
 use SyConstant\ErrorCode;
+use SyConstant\Project;
 use SyConstant\Server;
 use SyException\Swoole\ServerException;
 use Yaf\Registry;
