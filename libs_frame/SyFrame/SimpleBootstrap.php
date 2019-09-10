@@ -10,6 +10,8 @@ namespace SyFrame;
 use SyConstant\ErrorCode;
 use SyConstant\Server;
 use SyException\Swoole\ServerException;
+use SyFrame\Plugins\AspectAfterPlugin;
+use SyFrame\Plugins\AspectBeforePlugin;
 use SyFrame\Plugins\CheckConnectPlugin;
 use SyFrame\Plugins\FinishServicePlugin;
 use SyFrame\Plugins\MethodExistPlugin;
@@ -128,7 +130,9 @@ abstract class SimpleBootstrap extends Bootstrap_Abstract
                    ->setDefaultAction(SY_DEFAULT_ACTION)
                    ->registerPlugin(new MethodExistPlugin())
                    ->registerPlugin(new CheckConnectPlugin())
+                   ->registerPlugin(new AspectBeforePlugin())
                    ->registerPlugin(new ValidatorPlugin())
+                   ->registerPlugin(new AspectAfterPlugin())
                    ->registerPlugin(new FinishServicePlugin());
         $dispatcher->getRouter()->addRoute(Server::ROUTE_TYPE_SIMPLE, new SimpleRoute());
     }

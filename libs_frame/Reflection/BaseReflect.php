@@ -77,44 +77,43 @@ class BaseReflect
      * @param string $methodName 方法名称
      * @return array
      * @throws \SyException\Reflection\ReflectException
-     * @todo 添加切面
      */
-//    public static function getControllerAspectAnnotations(string $className, string $methodName) : array
-//    {
-//        $annotations = [
-//            'before' => [],
-//            'after' => [],
-//        ];
-//
-//        try {
-//            $class = new \ReflectionClass($className);
-//            $instance = $class->newInstanceWithoutConstructor();
-//            if ($instance instanceof BaseController) {
-//                $doc = $class->getMethod($methodName)->getDocComment();
-//                $docs = preg_filter('/\s+/', '', explode(PHP_EOL, $doc));
-//                foreach ($docs as $eDoc) {
-//                    preg_match('/\@([a-zA-Z0-9]+)\-(\S+)/', $eDoc, $saveDoc);
-//                    if (isset($saveDoc[1])) {
-//                        if ($saveDoc[1] == Server::ANNOTATION_NAME_ASPECT) {
-//                            $annotations['before'][] = $saveDoc[2];
-//                            $annotations['after'][] = $saveDoc[2];
-//                        } elseif ($saveDoc[1] == Server::ANNOTATION_NAME_ASPECT_BEFORE) {
-//                            $annotations['before'][] = $saveDoc[2];
-//                        } elseif ($saveDoc[1] == Server::ANNOTATION_NAME_ASPECT_AFTER) {
-//                            $annotations['after'][] = $saveDoc[2];
-//                        }
-//                    }
-//                }
-//            }
-//        } catch (ReflectException $e) {
-//            throw $e;
-//        } catch (\Exception $e) {
-//            Log::error($e->getMessage());
-//            throw new ReflectException(ErrorCode::getMsg(ErrorCode::REFLECT_RESOURCE_NOT_EXIST), ErrorCode::REFLECT_RESOURCE_NOT_EXIST);
-//        }
-//
-//        return $annotations;
-//    }
+    public static function getControllerAspectAnnotations(string $className, string $methodName) : array
+    {
+        $annotations = [
+            'before' => [],
+            'after' => [],
+        ];
+
+        try {
+            $class = new \ReflectionClass($className);
+            $instance = $class->newInstanceWithoutConstructor();
+            if ($instance instanceof BaseController) {
+                $doc = $class->getMethod($methodName)->getDocComment();
+                $docs = preg_filter('/\s+/', '', explode(PHP_EOL, $doc));
+                foreach ($docs as $eDoc) {
+                    preg_match('/\@([a-zA-Z0-9]+)\-(\S+)/', $eDoc, $saveDoc);
+                    if (isset($saveDoc[1])) {
+                        if ($saveDoc[1] == Server::ANNOTATION_NAME_ASPECT) {
+                            $annotations['before'][] = $saveDoc[2];
+                            $annotations['after'][] = $saveDoc[2];
+                        } elseif ($saveDoc[1] == Server::ANNOTATION_NAME_ASPECT_BEFORE) {
+                            $annotations['before'][] = $saveDoc[2];
+                        } elseif ($saveDoc[1] == Server::ANNOTATION_NAME_ASPECT_AFTER) {
+                            $annotations['after'][] = $saveDoc[2];
+                        }
+                    }
+                }
+            }
+        } catch (ReflectException $e) {
+            throw $e;
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            throw new ReflectException(ErrorCode::getMsg(ErrorCode::REFLECT_RESOURCE_NOT_EXIST), ErrorCode::REFLECT_RESOURCE_NOT_EXIST);
+        }
+
+        return $annotations;
+    }
 
     /**
      * @param string $className 类全名
