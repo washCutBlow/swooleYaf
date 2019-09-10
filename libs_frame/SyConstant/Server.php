@@ -15,6 +15,7 @@ final class Server
 
     const SERVER_TYPE_API_GATE = 'api'; //服务端类型-api入口
     const SERVER_TYPE_API_MODULE = 'rpc'; //服务端类型-api模块
+    const SERVER_TYPE_FRONT_GATE = 'frontgate'; //服务端类型-前端入口
     const SERVER_DATA_KEY_TIMESTAMP = 'SYREQ_TIME'; //服务端内部数据键名-请求时间戳
 
     //进程常量
@@ -71,4 +72,20 @@ final class Server
     const FUSE_NUM_REQUEST_ERROR = 20; //请求出错次数
     const FUSE_NUM_HALF_REQUEST_SUCCESS = 10; //半开状态请求成功次数
     const FUSE_MSG_REQUEST_ERROR = '{"code":10001,"data":[],"msg":"服务繁忙,请稍后重试"}'; //请求出错提示消息
+
+    //注解常量
+    public static $annotationSignTags = [
+        self::ANNOTATION_TAG_SIGN => 1,
+        self::ANNOTATION_TAG_IGNORE_SIGN => 1,
+        self::ANNOTATION_TAG_IGNORE_JWT => 1,
+    ];
+    const ANNOTATION_NAME_FILTER = 'SyFilter'; //名称-数据校验器
+    const ANNOTATION_NAME_ASPECT = 'SyAspect'; //名称-环绕切面
+    const ANNOTATION_NAME_ASPECT_BEFORE = 'SyAspectBefore'; //名称-前置切面
+    const ANNOTATION_NAME_ASPECT_AFTER = 'SyAspectAfter'; //名称-后置切面
+    const ANNOTATION_TAG_SIGN = '_sign'; //标识-接口签名
+    const ANNOTATION_TAG_IGNORE_SIGN = '_ignoresign'; //标识-取消接口签名
+    const ANNOTATION_TAG_IGNORE_JWT = '_ignorejwt'; //标识-取消jwt校验
+    const ANNOTATION_TAG_SY_TOKEN = '__sytoken'; //标识-框架令牌
+    const ANNOTATION_TAG_SESSION_JWT = '__sessionjwt'; //标识-JWT会话
 }

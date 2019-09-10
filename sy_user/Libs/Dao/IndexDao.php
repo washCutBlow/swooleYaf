@@ -19,4 +19,11 @@ class IndexDao
             'msg' => 'hello, ' . $data['name'],
         ];
     }
+
+    public static function index2(array $data)
+    {
+        return [
+            'msg' => 'hello, ' . $data['name'] . ',age is ' . $data['age'],
+        ];
+    }
 }

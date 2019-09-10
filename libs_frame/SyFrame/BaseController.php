@@ -13,7 +13,6 @@ use Yaf\Controller_Abstract;
 /**
  * Class BaseController
  * @package SyFrame
- * @todo 集成签名状态
  */
 abstract class BaseController extends Controller_Abstract
 {
@@ -29,7 +28,7 @@ abstract class BaseController extends Controller_Abstract
      * 接口签名状态
      * @var bool
      */
-//    public $signStatus = false;
+    public $signStatus = false;
     /**
      * 切面标识数组
      * @var array

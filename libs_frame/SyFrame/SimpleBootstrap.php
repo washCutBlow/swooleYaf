@@ -13,6 +13,7 @@ use SyException\Swoole\ServerException;
 use SyFrame\Plugins\CheckConnectPlugin;
 use SyFrame\Plugins\FinishServicePlugin;
 use SyFrame\Plugins\MethodExistPlugin;
+use SyFrame\Plugins\ValidatorPlugin;
 use SyFrame\Routes\SimpleRoute;
 use Tool\Tool;
 use Yaf\Application;
@@ -127,6 +128,7 @@ abstract class SimpleBootstrap extends Bootstrap_Abstract
                    ->setDefaultAction(SY_DEFAULT_ACTION)
                    ->registerPlugin(new MethodExistPlugin())
                    ->registerPlugin(new CheckConnectPlugin())
+                   ->registerPlugin(new ValidatorPlugin())
                    ->registerPlugin(new FinishServicePlugin());
         $dispatcher->getRouter()->addRoute(Server::ROUTE_TYPE_SIMPLE, new SimpleRoute());
     }

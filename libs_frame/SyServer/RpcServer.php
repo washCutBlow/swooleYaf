@@ -8,6 +8,7 @@
 namespace SyServer;
 
 use Log\Log;
+use Request\RequestSign;
 use Response\Result;
 use SyConstant\ErrorCode;
 use SyConstant\Server;
@@ -112,7 +113,6 @@ class RpcServer extends BaseServer
     /**
      * 初始化请求数据
      * @param array $data
-     * @todo 去除签名参数
      * @todo 集成session会话
      */
     private function initRequest(array $data)
@@ -123,8 +123,8 @@ class RpcServer extends BaseServer
         $_FILES = [];
         $_SESSION = [];
         $_SERVER['SYREQ_ID'] = $data['__req_id'] ?? hash('md4', Tool::getNowTime() . Tool::createNonceStr(8));
-//        unset($_POST[RequestSign::KEY_SIGN]);
-//        unset($_POST['__req_id']);
+        unset($_POST[RequestSign::KEY_SIGN]);
+        unset($_POST['__req_id']);
 
         Registry::del(Server::REGISTRY_NAME_SERVICE_ERROR);
 //        SessionTool::initSessionJwt();
