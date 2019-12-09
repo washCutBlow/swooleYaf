@@ -1,6 +1,5 @@
 <?php
-final class SyFrameLoader
-{
+final class SyFrameLoader {
     /**
      * @var \SyFrameLoader
      */
@@ -15,8 +14,7 @@ final class SyFrameLoader
      */
     private $excelStatus = true;
 
-    private function __construct()
-    {
+    private function __construct() {
         $this->preHandleMap = [
             'PHPExcel' => 'preHandlePhpExcel',
         ];

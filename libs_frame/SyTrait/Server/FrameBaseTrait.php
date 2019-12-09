@@ -52,7 +52,7 @@ trait FrameBaseTrait
 
     protected function checkServerBase()
     {
-        $numModules = $this->_configs['server']['cachenum']['modules'];
+        $numModules = 1;//$this->_configs['server']['cachenum']['modules'];
         if ($numModules < 1) {
             exit('服务模块缓存数量不能小于1');
         } elseif (($numModules & ($numModules - 1)) != 0) {

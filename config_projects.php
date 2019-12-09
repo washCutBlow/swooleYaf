@@ -1,5 +1,5 @@
 <?php
-$serverHost = \Yaconf::get('syserver.base.server.host');
+$serverHost = '127.0.0.1';//\Yaconf::get('syserver.base.server.host');
 
 return [
     0 => [

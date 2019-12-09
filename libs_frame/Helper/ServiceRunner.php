@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: 姜伟
- * Date: 2018/7/21 0021
- * Time: 9:28
- */
+
 namespace Helper;
 
 use SyServer\HttpServer;
@@ -22,6 +17,23 @@ class ServiceRunner
      */
     public static function run(string $apiName, array $totalModule)
     {
+        /*eg:sudo php -c /etc/php-cli.ini /Users/zhanglei061/src/kaiyuanzoudu/sydemo_project/helper_service.php -n sy_api -s start -module a01api -port 7000*/
+        /*sudo php -c /etc/php-cli.ini /Users/zhanglei061/src/kaiyuanzoudu/sydemo_project/helper_service.php -n sy_user -s start -module a01user -port 7010*/
+
+        /* sudo php -c /etc/php-cli.ini /Users/zhanglei061/src/kaiyuanzoudu/sydemo_project/helper_service.php -n sy_api -s start -module a01api -port 7000 && sudo php -c /etc/php-cli.ini       /Users/zhanglei061/src/kaiyuanzoudu/sydemo_project/helper_service.php -n sy_api -s startstatus -module a01api -port 7000
+         * sudo php -c /etc/php-cli.ini /Users/zhanglei061/src/kaiyuanzoudu/sydemo_project/helper_service.php -n sy_user -s start -module a01user -port 7010 && sudo php -c /etc/php-cli.ini /Users/zhanglei061/src/kaiyuanzoudu/sydemo_project/helper_service.php -n sy_user -s startstatus -module a01user -port 7010
+         *
+         *
+         * */
+        /*a01api
+        array(2) {
+          [0] =>
+          string(6) "a01api"
+          [1] =>
+          string(7) "a01user"
+        }
+        */
+        // sy_api
         $projectName = trim(Tool::getClientOption('-n', false, ''));
         if (strlen($projectName) == 0) {
             exit('参数 -n 服务项目名称无效,必须与项目目录相同,否则无法加载 profile文件' . PHP_EOL);

@@ -167,10 +167,10 @@ class RedisSingleton
         $this->conn = null;
         $configs = Tool::getConfig('caches.' . SY_ENV . SY_PROJECT . '.redis');
 
-        $host = Tool::getArrayVal($configs, 'host');
-        $port = Tool::getArrayVal($configs, 'port');
-        $pwd = Tool::getArrayVal($configs, 'password', '');
-        $dbIndex = (int)Tool::getArrayVal($configs, 'database_index', 0);
+        $host = '10.33.107.18';//Tool::getArrayVal($configs, 'host');
+        $port = '6378';//Tool::getArrayVal($configs, 'port');
+        $pwd = '';//Tool::getArrayVal($configs, 'password', '');
+        $dbIndex = 0;//(int)Tool::getArrayVal($configs, 'database_index', 0);
 
         try {
             $redis = new \Redis();

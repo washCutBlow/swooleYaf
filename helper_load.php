@@ -11,4 +11,5 @@ if (substr($frameLibsDir, -1) == '/') {
     define('SY_FRAME_LIBS_ROOT', $frameLibsDir . '/');
 }
 unset($frameLibsDir);
+//define('SY_FRAME_LIBS_ROOT', SY_ROOT.'/libs_frame/');
 require_once SY_FRAME_LIBS_ROOT . 'helper_autoload.php';

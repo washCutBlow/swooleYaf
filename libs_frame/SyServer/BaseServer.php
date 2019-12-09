@@ -76,6 +76,12 @@ abstract class BaseServer
 
         $this->checkSystemEnv();
         $this->_configs = Tool::getConfig('syserver.' . SY_ENV . SY_MODULE);
+        /*手动补充写死，了解完框架结构后再研究*/
+        $this->_configs['server']['host'] = '127.0.0.1';
+
+
+
+
 
         define('SY_SERVER_IP', $this->_configs['server']['host']);
 
@@ -99,8 +105,9 @@ abstract class BaseServer
         $this->_configs['swoole']['socket_buffer_size'] = Project::SIZE_CLIENT_SOCKET_BUFFER;
         $this->_configs['swoole']['buffer_output_size'] = Project::SIZE_CLIENT_BUFFER_OUTPUT;
         //设置线程数量
-        $execRes = Tool::execSystemCommand('cat /proc/cpuinfo | grep "processor" | wc -l');
-        $this->_configs['swoole']['reactor_num'] = (int)(2 * $execRes['data'][0]);
+        /*$execRes = Tool::execSystemCommand('cat /proc/cpuinfo | grep "processor" | wc -l');
+        $this->_configs['swoole']['reactor_num'] = (int)(2 * $execRes['data'][0]);*/
+        $this->_configs['swoole']['reactor_num'] = 2;
         $this->_host = $this->_configs['server']['host'];
         $this->_port = $this->_configs['server']['port'];
         $this->_pidFile = SY_ROOT . '/pidfile/' . SY_MODULE . $this->_port . '.pid';
@@ -171,7 +178,7 @@ abstract class BaseServer
             exit('swoole版本必须大于等于' . Server::VERSION_MIN_SWOOLE . PHP_EOL);
         }
         if (version_compare(SEASLOG_VERSION, Server::VERSION_MIN_SEASLOG, '<')) {
-            exit('seaslog版本必须大于等于' . Server::VERSION_MIN_SEASLOG . PHP_EOL);
+            //exit('seaslog版本必须大于等于' . Server::VERSION_MIN_SEASLOG . PHP_EOL);
         }
         if (version_compare(YAC_VERSION, Server::VERSION_MIN_YAC, '<')) {
             exit('yac版本必须大于等于' . Server::VERSION_MIN_YAC . PHP_EOL);
@@ -289,7 +296,7 @@ abstract class BaseServer
         if ($workerId >= $server->setting['worker_num']) {
             @cli_set_process_title(Server::PROCESS_TYPE_TASK . SY_MODULE . $this->_port);
         } else {
-            @cli_set_process_title(Server::PROCESS_TYPE_WORKER . SY_MODULE . $this->_port);
+            //@cli_set_process_title(Server::PROCESS_TYPE_WORKER . SY_MODULE . $this->_port);
         }
 
         if ($workerId == 0) { //保证每一个服务只执行一次定时任务
@@ -454,11 +461,11 @@ abstract class BaseServer
 
         file_put_contents($this->_tipFile, '\e[1;36m start ' . SY_MODULE . ': \e[0m \e[1;32m \t[success] \e[0m');
 
-        $config = Tool::getConfig('project.' . SY_ENV . SY_PROJECT);
+        /*$config = Tool::getConfig('project.' . SY_ENV . SY_PROJECT);
         Dir::create($config['dir']['store']['image']);
         Dir::create($config['dir']['store']['music']);
         Dir::create($config['dir']['store']['resources']);
-        Dir::create($config['dir']['store']['cache']);
+        Dir::create($config['dir']['store']['cache']);*/
 
         self::$_syServer->set(self::$_serverToken, [
             'memory_usage' => memory_get_usage(),
@@ -466,10 +473,10 @@ abstract class BaseServer
             'request_times' => 0,
             'request_handling' => 0,
             'host_local' => $this->_host,
-            'storepath_image' => $config['dir']['store']['image'],
-            'storepath_music' => $config['dir']['store']['music'],
-            'storepath_resources' => $config['dir']['store']['resources'],
-            'storepath_cache' => $config['dir']['store']['cache'],
+            'storepath_image' => '',//$config['dir']['store']['image'],
+            'storepath_music' => '',//$config['dir']['store']['music'],
+            'storepath_resources' =>'',// $config['dir']['store']['resources'],
+            'storepath_cache' => '',//$config['dir']['store']['cache'],
             'token_etime' => time() + 7200,
             'unique_num' => 100000000,
         ]);

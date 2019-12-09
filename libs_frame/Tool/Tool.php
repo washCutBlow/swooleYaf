@@ -101,6 +101,7 @@ class Tool
      */
     public static function getConfig(string $tag, string $field = '', $default = null)
     {
+        echo $tag . "\n";
         $configs = \Yaconf::get($tag);
         if (is_null($configs)) {
             return $default;

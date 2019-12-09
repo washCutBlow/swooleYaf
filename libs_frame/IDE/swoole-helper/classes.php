@@ -65,16 +65,6 @@ class swoole_timer_iterator extends Swoole\Timer\Iterator
 
 }
 
-class co extends Co
-{
-
-}
-
-class chan extends Chan
-{
-
-}
-
 class swoole_runtime extends Swoole\Runtime
 {
 
